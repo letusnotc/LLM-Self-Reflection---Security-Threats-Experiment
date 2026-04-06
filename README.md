@@ -715,24 +715,27 @@ McNemar's test showed no statistically significant difference between Level 0 an
 
 Self-reflection requires a model that can **reason about its own reasoning** — this is inherently a multi-step cognitive task. The core tradeoff we discovered:
 
+```mermaid
+quadrantChart
+    title Cost vs Capability Tradeoff
+    x-axis "Low Capability" --> "High Capability"
+    y-axis "Low Cost" --> "High Cost"
+    quadrant-1 "Ideal but Expensive"
+    quadrant-2 "Too Expensive & Weak"
+    quadrant-3 "Cheap but Broken"
+    quadrant-4 "Sweet Spot (if it existed)"
+    "Gemini 3 Flash (~₹220)": [0.95, 0.90]
+    "Gemini 2.5 Flash (~₹170)": [0.80, 0.75]
+    "Flash-Lite (~₹10)": [0.45, 0.15]
+    "Ollama - Free but Broken": [0.10, 0.05]
 ```
-                        COST
-                         ^
-                         |
-     Gemini 3 Flash ●    |    Strong reasoning, perfect on text domains
-     (~₹220/run)         |    but too expensive for large-scale experiments
-                         |
-     Gemini 2.5 Flash ●  |    Good reasoning with thinking tokens
-     (~₹170/run)         |    but thinking tokens cost $3.50/1M — 
-                         |    bulk of the expense
-                         |
-     Flash-Lite ●        |    Cheap and fast
-     (~₹10/run)          |    but too weak for meaningful self-reflection
-                         |
-     Ollama (Local) ●    |    Free, but can't produce structured JSON
-     (₹0/run)            |    — breaks the entire pipeline
-                         +-----------------------------------------> CAPABILITY
-```
+
+| Model | Cost/Run | Capability | Self-Reflection Result |
+|-------|----------|-----------|----------------------|
+| **Gemini 3 Flash** | ~₹220 | Strong reasoning, perfect on text | Too accurate at L0 — ceiling effect, reflection redundant |
+| **Gemini 2.5 Flash** | ~₹170 | Good reasoning + thinking tokens | Same ceiling effect, thinking tokens are bulk of expense |
+| **Flash-Lite** | ~₹10 | Fast and cheap | Too weak — critic gives bad feedback, revision caves |
+| **Ollama (Local)** | ₹0 | Open-source 7-9B models | Can't produce structured JSON — pipeline breaks entirely |
 
 **The problem**: Self-reflection needs a model capable enough to:
 1. Produce valid structured JSON consistently (Ollama models fail here)
@@ -807,32 +810,23 @@ The CERT dataset labels are based on **who** the user is and **when** they act (
 
 ### Summary: The Tradeoff Triangle
 
-```
-              ACCURACY
-                 ^
-                /|\
-               / | \
-              /  |  \
-             /   |   \
-            / gemini  \
-           / 3-flash   \
-          /  (100% but  \
-         /   ceiling)    \
-        /       |         \
-       /  "Goldilocks     \
-      /    Zone" — where    \
-     /   reflection COULD    \
-    /      help, but we       \
-   /     couldn't find a       \
-  /    model that sits here     \
- /            |                  \
-/  flash-lite |    Ollama         \
-/ (93% L0 but |  (can't even      \
-/ reflection  |   produce JSON)    \
-/   hurts)    |                     \
-+-------------+----------------------> COST
-FREE          $0.10           $2.60
-(broken)     (degrades)    (ceiling)
+```mermaid
+graph TD
+    subgraph "The Tradeoff Triangle: Accuracy vs Cost vs Capability"
+        TOP["Gemini 3 Flash & 2.5 Flash<br/>100% Accuracy on Phishing & Network<br/>but CEILING EFFECT — nothing to improve<br/>Cost: ₹170-220/run"]
+        MID["'Goldilocks Zone'<br/>Where reflection COULD help<br/>Model is good but imperfect<br/>We couldn't find a model here"]
+        LEFT["Flash-Lite<br/>93% L0 Accuracy<br/>but reflection HURTS<br/>Cost: ~₹10/run"]
+        RIGHT["Ollama (Local)<br/>Can't even produce JSON<br/>Pipeline breaks entirely<br/>Cost: ₹0 but BROKEN"]
+    end
+
+    TOP -.->|"too accurate"| MID
+    LEFT -.->|"too weak to reflect"| MID
+    RIGHT -.->|"can't even start"| MID
+
+    style TOP fill:#4A90D9,color:#fff,stroke:#4A90D9
+    style MID fill:#7BC67E,color:#fff,stroke:#7BC67E
+    style LEFT fill:#E8A838,color:#fff,stroke:#E8A838
+    style RIGHT fill:#D94A4A,color:#fff,stroke:#D94A4A
 ```
 
 The ideal operating point — where the model is good enough to benefit from reflection but not so good that it's already perfect — remains elusive with current models and datasets. This is itself a valuable research finding: **self-reflection is not a universal improvement; it requires careful matching of model capability, domain complexity, and dataset difficulty.**
