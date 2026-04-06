@@ -709,57 +709,6 @@ McNemar's test showed no statistically significant difference between Level 0 an
 
 ---
 
-## Limitations & Future Work
-
-### Current Limitations
-
-1. **Sample Size**: Experiments used 6-30 samples per domain due to API costs. Larger samples (100+) would provide stronger statistical power.
-
-2. **Domain Coverage**: Malware PE analysis and insider threat detection proved beyond LLM capability with current prompting approaches. Alternative representations (e.g., natural language descriptions of PE features, multi-event session summaries) may help.
-
-3. **Model Selection**: Only Google Gemini models were tested. Other frontier models (GPT-4o, Claude, Llama 405B) may show different reflection dynamics.
-
-4. **Open-Source Model Failure**: Local models via Ollama (Llama 3, Mistral, Gemma) could not reliably produce structured JSON output, preventing their use in the multi-step pipeline. This is a significant limitation for reproducibility and cost.
-
-5. **Single Threat Classification**: Each sample is classified in isolation. Real-world security operations involve correlating multiple signals over time.
-
-### Future Work
-
-- **Larger-scale experiments** with 100+ samples per domain on capable models
-- **Alternative data representations** for malware (natural language PE reports) and logs (session-level summaries)
-- **Multi-model reflection** — using different models for detection vs. critic roles
-- **Chain-of-thought prompting** — explicit reasoning chains before verdict
-- **Fine-tuned models** — domain-specific fine-tuning on security datasets
-- **Real-time evaluation** — integration with live security feeds and SIEM systems
-- **Open-source model improvement** — structured output fine-tuning for local models
-
----
-
-## How to Reproduce
-
-```bash
-# Clone and setup
-git clone <repository-url>
-cd <project-directory>
-pip install -r requirements.txt
-
-# Configure API key
-echo "GOOGLE_API_KEY=your-key" > .env
-
-# Run the full experiment
-python -m experiments.run_experiment --samples 10
-
-# Run specific domain
-python -m experiments.run_experiment --domain phishing --samples 20
-
-# Run specific level
-python -m experiments.run_experiment --level 0 --samples 10
-```
-
-Results are saved to `experiments/results/` as JSON (predictions + metrics) and CSV (cost data).
-
----
-
 ## Problems We Faced & The Fundamental Tradeoffs
 
 ### The Thinking Token Tradeoff
@@ -887,6 +836,31 @@ FREE          $0.10           $2.60
 ```
 
 The ideal operating point — where the model is good enough to benefit from reflection but not so good that it's already perfect — remains elusive with current models and datasets. This is itself a valuable research finding: **self-reflection is not a universal improvement; it requires careful matching of model capability, domain complexity, and dataset difficulty.**
+
+---
+
+## How to Reproduce
+
+```bash
+# Clone and setup
+git clone https://github.com/letusnotc/LLM-Self-Reflection---Security-Threats-Experiment.git
+cd LLM-Self-Reflection---Security-Threats-Experiment
+pip install -r requirements.txt
+
+# Configure API key
+echo "GOOGLE_API_KEY=your-key" > .env
+
+# Run the full experiment
+python -m experiments.run_experiment --samples 10
+
+# Run specific domain
+python -m experiments.run_experiment --domain phishing --samples 20
+
+# Run specific level
+python -m experiments.run_experiment --level 0 --samples 10
+```
+
+Results are saved to `experiments/results/` as JSON (predictions + metrics) and CSV (cost data).
 
 ---
 
