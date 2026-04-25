@@ -98,8 +98,7 @@ def run_single_experiment(domain: str, level: int, samples: list,
         num_rounds = result.get("num_rounds", 0) if result else 0
         cost_tracker.finish(num_rounds=num_rounds)
 
-        # Rate limiting — be kind to the API
-        time.sleep(1)
+        # No rate limiting needed — running locally via Ollama
 
     metrics = compute_metrics(y_true, y_pred, y_prob)
 
@@ -129,13 +128,15 @@ def run_all_experiments(domains: list = None, levels: list = None,
     all_results = {}
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    print("=" * 60)
+    from src.config import MODEL_NAME, OLLAMA_BASE_URL
+    print("="*60)
     print("EXPERIMENT: Self-Reflection in Threat Detection")
+    print(f"Model: {MODEL_NAME} (Ollama local @ {OLLAMA_BASE_URL})")
     print(f"Domains: {domains}")
     print(f"Levels: {levels}")
     print(f"Samples per domain: {samples_per_domain}")
     print(f"Timestamp: {timestamp}")
-    print("=" * 60)
+    print("="*60)
 
     for domain in domains:
         print(f"\n{'='*40}")
@@ -281,7 +282,7 @@ def run_all_experiments(domains: list = None, levels: list = None,
 def main():
     parser = argparse.ArgumentParser(description="Run threat detection experiments")
     parser.add_argument("--domain", type=str, default=None,
-                        help="Specific domain to test (phishing, network_intrusion, malware, log_analysis)")
+                        help="Specific domain to test (phishing, network_intrusion)")
     parser.add_argument("--level", type=int, default=None,
                         help="Specific reflection level (0, 1, 2)")
     parser.add_argument("--samples", type=int, default=None,

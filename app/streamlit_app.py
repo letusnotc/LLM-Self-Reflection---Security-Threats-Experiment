@@ -75,44 +75,12 @@ Unsubscribe: techcrunch.com/unsubscribe""",
   serror_rate: 0.0, same_srv_rate: 1.0
   dst_host_count: 30, dst_host_serror_rate: 0.0""",
     },
-    "malware": {
-        "Suspicious PE File": """File Analysis Features:
-  SizeOfCode: 512, NumberOfSections: 1
-  SectionsMaxEntropy: 7.98, SectionsMeanEntropy: 7.98
-  NumberOfImports: 3, SizeOfImage: 65536
-  DllCharacteristics: 0, AddressOfEntryPoint: 4096
-  ResourcesMaxEntropy: 7.95""",
-        "Legitimate Software": """File Analysis Features:
-  SizeOfCode: 151552, NumberOfSections: 5
-  SectionsMaxEntropy: 6.42, SectionsMeanEntropy: 4.85
-  NumberOfImports: 72, SizeOfImage: 245760
-  DllCharacteristics: 33120, AddressOfEntryPoint: 100944
-  ResourcesMaxEntropy: 3.41""",
-    },
-    "log_analysis": {
-        "Data Exfiltration (Insider Threat)": """System/Authentication Log Entry:
-  timestamp: 2024-03-15 02:34:00
-  user: john.doe, role: junior_analyst, department: marketing
-  action: file_download
-  resource: /sensitive/customer_database_full.sql
-  source_ip: 10.0.5.23, bytes_transferred: 524288000
-  status: success
-  notes: Employee submitted resignation last week""",
-        "Normal File Access": """System/Authentication Log Entry:
-  timestamp: 2024-03-15 10:30:00
-  user: bob.williams, role: manager, department: finance
-  action: file_access
-  resource: /shared/quarterly_report_q1.xlsx
-  source_ip: 10.0.3.22, bytes_transferred: 245000
-  status: success
-  notes: Preparing for quarterly review""",
-    },
 }
 
 
 def main():
     st.title("Self-Reflection in Agent-Based Threat Detection")
-    st.markdown("*Evaluating how self-reflection and error correction improve security threat detection*")
+    st.markdown("*Fully local inference via Ollama (gemma4:e2b) — evaluating how self-reflection improves threat detection*")
 
     # --- Sidebar ---
     with st.sidebar:

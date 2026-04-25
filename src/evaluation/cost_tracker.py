@@ -121,8 +121,22 @@ class TokenCountingCallback(BaseCallbackHandler):
     def on_llm_end(self, response, **kwargs):
         """Record token usage when an LLM call completes."""
         usage = {}
+
+        # Try standard llm_output first (Google, OpenAI)
         if hasattr(response, "llm_output") and response.llm_output:
             usage = response.llm_output.get("token_usage", {})
+
+        # Fallback: Ollama reports usage in generation_info
+        if not usage and hasattr(response, "generations") and response.generations:
+            for gen_list in response.generations:
+                for gen in gen_list:
+                    info = getattr(gen, "generation_info", {}) or {}
+                    if "prompt_eval_count" in info or "eval_count" in info:
+                        usage = {
+                            "prompt_tokens": info.get("prompt_eval_count", 0),
+                            "completion_tokens": info.get("eval_count", 0),
+                        }
+                        break
 
         self.cost_tracker.record_api_call(
             prompt_tokens=usage.get("prompt_tokens", 0),
