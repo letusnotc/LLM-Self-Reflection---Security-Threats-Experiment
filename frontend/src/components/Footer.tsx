@@ -48,7 +48,7 @@ export default function Footer() {
           <ul className="space-y-3 text-sm">
             <li>
               <a
-                href="https://github.com"
+                href="https://github.com/letusnotc/LLM-Self-Reflection---Security-Threats-Experiment/tree/main"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-200 transition-colors"
@@ -58,7 +58,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://github.com"
+                href="https://github.com/letusnotc/LLM-Self-Reflection---Security-Threats-Experiment/tree/ollama"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-200 transition-colors"

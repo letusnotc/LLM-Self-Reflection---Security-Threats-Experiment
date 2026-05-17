@@ -48,7 +48,9 @@ export default function Hero() {
             Try Live Detection
           </a>
           <a
-            href="#research"
+            href="https://drive.google.com/file/d/1-TvGb-NGHRaN1qYc_ZIImxgWLEA6vqSb/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-8 py-3.5 bg-white/80 border border-stone-300 hover:border-stone-400 text-stone-700 text-sm font-medium rounded-lg transition-colors "
           >
             Read the Paper

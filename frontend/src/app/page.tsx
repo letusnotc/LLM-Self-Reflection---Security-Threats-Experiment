@@ -34,9 +34,9 @@ const navItems: CardNavItem[] = [
     bgColor: "#c2410c",
     textColor: "#fff",
     links: [
-      { label: "Read the Paper", href: "#research", ariaLabel: "Research paper" },
-      { label: "GitHub — Gemini", href: "https://github.com", ariaLabel: "GitHub main branch" },
-      { label: "GitHub — Ollama", href: "https://github.com", ariaLabel: "GitHub Ollama branch" },
+      { label: "Read the Paper", href: "https://drive.google.com/file/d/1-TvGb-NGHRaN1qYc_ZIImxgWLEA6vqSb/view?usp=sharing", ariaLabel: "Research paper" },
+      { label: "GitHub — Gemini", href: "https://github.com/letusnotc/LLM-Self-Reflection---Security-Threats-Experiment/tree/main", ariaLabel: "GitHub main branch" },
+      { label: "GitHub — Ollama", href: "https://github.com/letusnotc/LLM-Self-Reflection---Security-Threats-Experiment/tree/ollama", ariaLabel: "GitHub Ollama branch" },
     ],
   },
 ];
