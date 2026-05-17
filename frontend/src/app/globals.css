@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+body {
+  background: #f5f4f0;
+  font-family: var(--font-sans), Arial, sans-serif;
+}
+
+.card-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
