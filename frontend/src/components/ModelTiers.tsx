@@ -16,9 +16,9 @@ const tiers: Tier[] = [
     tag: "Baseline",
     title: "No Reflection",
     chart: `flowchart TD
-    A["**Sample**"]
-    --> B["**Detection Agent**"]
-    --> C["**Final Verdict**"]
+    A["Sample"]
+    --> B["Detection Agent"]
+    --> C["Final Verdict"]
 
     classDef default fill:#ffffff, stroke:#e7e5e4, stroke-width:2px, color:#1c1917, font-family:sans-serif;
     classDef sample fill:#1c1917, color:#ffffff, stroke:#f97316, stroke-width:3px;
@@ -41,11 +41,11 @@ const tiers: Tier[] = [
     tag: "Single Reflection",
     title: "Self-Critique",
     chart: `flowchart TD
-    A["**Sample**"]
-    --> B["**Detection Agent**"]
-    --> C["**Critic Agent**"]
-    --> D["**Revision Step**"]
-    --> E["**Final Verdict**"]
+    A["Sample"]
+    --> B["Detection Agent"]
+    --> C["Critic Agent"]
+    --> D["Revision Step"]
+    --> E["Final Verdict"]
 
     classDef default fill:#ffffff, stroke:#e7e5e4, stroke-width:2.5px, color:#1c1917, font-family:sans-serif;
     classDef sample fill:#1c1917, color:#ffffff, stroke:#f97316, stroke-width:3.5px;
@@ -72,18 +72,18 @@ const tiers: Tier[] = [
     tag: "Iterative Consensus",
     title: "Consensus Loop",
     chart: `flowchart TD
-    A["**Sample**"]
-    --> B["**Detection Agent**"]
-    --> C{{"**Critic Review**"}}
+    A["Sample"]
+    --> B["Detection Agent"]
+    --> C{{"Critic Review"}}
 
-    C -->|"**Consensus**"| D["**Final Verdict**"]
-    C -->|"**Disagree**"| E["**Revise**"]
+    C -->|"Consensus"| D["Final Verdict"]
+    C -->|"Disagree"| E["Revise"]
     E --> C
 
     classDef default fill:#ffffff, stroke:#e7e5e4, stroke-width:2.5px, color:#1c1917, font-family:sans-serif;
     classDef sample fill:#1c1917, color:#ffffff, stroke:#f97316, stroke-width:3.5px;
     classDef detection fill:#f5f4f0, color:#1c1917, stroke:#f97316, stroke-width:3px;
-    classDef critic fill:#fefce8, color:#1c1917, stroke:#f97316, stroke-width:4px, font-weight:bold;
+    classDef critic fill:#fefce8, color:#1c1917, stroke:#f97316, stroke-width:4px;
     classDef verdict fill:#ffffff, color:#1c1917, stroke:#f97316, stroke-width:3.5px;
     classDef revise fill:#fef2f2, color:#1c1917, stroke:#f97316, stroke-width:3px;
     class A sample
@@ -129,13 +129,14 @@ export default function ModelTiers() {
           {tiers.map((tier) => (
             <div
               key={tier.level}
-              className={`relative card-lift h-full rounded-2xl p-8 border ${
+              className={`relative card-lift h-full rounded-2xl p-8 border flex flex-col ${
                 tier.highlight
                   ? "bg-white border-orange-200 shadow-lg"
                   : "bg-white border-stone-200"
               }`}
             >
-              <div className="flex items-center justify-between mb-8">
+              {/* Level + tag */}
+              <div className="flex items-center justify-between mb-5">
                 <span
                   className={`font-serif text-xs font-bold tracking-widest ${
                     tier.highlight ? "text-orange-500" : "text-stone-400"
@@ -148,18 +149,21 @@ export default function ModelTiers() {
                 </span>
               </div>
 
-              <div className="w-full mb-5">
-                <MermaidDiagram chart={tier.chart} />
-              </div>
-
-              <h3 className="font-serif text-2xl font-bold text-stone-800 mb-3">
+              {/* Title + description above diagram */}
+              <h3 className="font-serif text-2xl font-bold text-stone-800 mb-2">
                 {tier.title}
               </h3>
-              <p className="text-stone-500 text-sm leading-relaxed mb-8">
+              <p className="text-stone-500 text-sm leading-relaxed mb-6">
                 {tier.description}
               </p>
 
-              <div className="space-y-3 pt-6 border-t border-stone-100">
+              {/* Diagram */}
+              <div className="w-full flex-1">
+                <MermaidDiagram chart={tier.chart} />
+              </div>
+
+              {/* Metrics */}
+              <div className="space-y-3 pt-6 border-t border-stone-100 mt-6">
                 {tier.metrics.map((m) => (
                   <div key={m.label} className="flex items-center justify-between text-sm">
                     <span className="text-stone-400">{m.label}</span>
