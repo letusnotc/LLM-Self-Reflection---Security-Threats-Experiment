@@ -1,39 +1,39 @@
 const domains = [
   {
+    tag: "Phishing Email",
+    title: "Phishing Detection",
+    description:
+      "Classifies raw emails using headers, sender address, and body text from the CEAS 2008 corpus. Best-performing domain — L0 baseline hits 93.3% accuracy; reflection degrades this to 80.0% at L2.",
+    stat: "93.3%",
+    statLabel: "accuracy",
+    dataset: "CEAS 2008",
+  },
+  {
     tag: "Network Intrusion",
     title: "Network Traffic",
     description:
-      "Detects DoS, Probe, R2L, and U2R attacks using NSL-KDD dataset features. Self-reflection improves accuracy by up to 3.4% over the baseline pass.",
-    stat: "93.8%",
+      "Detects DoS, Probe, R2L, and U2R attacks from 41 NSL-KDD connection features. L0 baseline achieves 90.0% accuracy; reflection consistently degrades performance across all model tiers.",
+    stat: "90.0%",
     statLabel: "accuracy",
     dataset: "NSL-KDD",
-  },
-  {
-    tag: "Insider Threat",
-    title: "Insider Behavior",
-    description:
-      "Identifies malicious insider patterns from the CERT dataset. The highest-improvement domain — reflection adds +4.1 points to F1 score.",
-    stat: "91.2%",
-    statLabel: "F1 score",
-    dataset: "CERT r4.2",
   },
   {
     tag: "Malware",
     title: "Malware Detection",
     description:
-      "Classifies binaries using ClaMP static analysis features. Flash-Lite accuracy ceiling constrains reflection gains; larger models clear the gap.",
-    stat: "78.3%",
-    statLabel: "accuracy",
+      "Classifies Windows PE binaries using 70 static ClaMP features. LLMs cannot reason over dense numeric feature vectors — all models sit at random-chance accuracy (50%) regardless of reflection level.",
+    stat: "66.7%",
+    statLabel: "F1 score",
     dataset: "ClaMP",
   },
   {
-    tag: "Log Analysis",
-    title: "System Logs",
+    tag: "Insider Threat",
+    title: "Insider Behavior",
     description:
-      "Analyzes HDFS log sequences for anomalies. Structured JSON output constraints expose fundamental weaknesses in open-source model families.",
-    stat: "84.6%",
+      "Identifies malicious insider patterns from CERT r4.2 employee activity logs. Hardest domain — L0 baseline scores 36.7% accuracy, exposing a fundamental modality mismatch for event-sequence data.",
+    stat: "36.7%",
     statLabel: "accuracy",
-    dataset: "HDFS",
+    dataset: "CERT r4.2",
   },
 ];
 
