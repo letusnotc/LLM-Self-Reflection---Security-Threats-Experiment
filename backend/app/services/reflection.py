@@ -24,8 +24,25 @@ if OPENROUTER_API_KEY:
     )
 
 
+_VALID_LABELS = {"Phishing", "Legitimate"}
+
+
 def _is_gemini(model: str) -> bool:
     return model.startswith("gemini-")
+
+
+def _normalize_label(raw: str) -> str:
+    """Coerce model output to exactly 'Phishing' or 'Legitimate'.
+    Raises ValueError if it cannot be resolved."""
+    cleaned = raw.strip().strip('"').strip("'")
+    if cleaned in _VALID_LABELS:
+        return cleaned
+    lower = cleaned.lower()
+    if "phish" in lower:
+        return "Phishing"
+    if "legit" in lower or "normal" in lower or "benign" in lower or "safe" in lower:
+        return "Legitimate"
+    raise ValueError(f"Model returned unrecognized label: {raw!r}")
 
 
 def _parse(text: str) -> dict:
@@ -93,7 +110,7 @@ async def run_l0(email: str, model: str = L0_MODEL) -> L0Result:
         text, usage = await _call_openrouter(model, prompt)
         data = _parse(text)
     return L0Result(
-        label=data["label"],
+        label=_normalize_label(data["label"]),
         confidence=float(data["confidence"]),
         reasoning=data["reasoning"],
         indicators=data.get("indicators", []),
@@ -117,10 +134,23 @@ async def run_l1(email: str, l0: L0Result, model: str = L1_MODEL) -> L1Result:
     else:
         text, usage = await _call_openrouter(model, prompt)
         data = _parse(text)
+
+    new_label = _normalize_label(data["label"])
+    new_confidence = float(data["confidence"])
+    changed = bool(data.get("changed", False))
+
+    # Code-level guard: reject the label change if confidence is below 0.5.
+    # A model that flips the verdict but can only muster <50% confidence
+    # is not reliable enough to override a clear L0 result.
+    if changed and new_label != l0.label and new_confidence < 0.5:
+        new_label = l0.label
+        new_confidence = l0.confidence
+        changed = False
+
     return L1Result(
-        label=data["label"],
-        confidence=float(data["confidence"]),
-        changed=bool(data.get("changed", False)),
+        label=new_label,
+        confidence=new_confidence,
+        changed=changed,
         critique=data["critique"],
         revised_reasoning=data["revised_reasoning"],
         model=model,
@@ -157,11 +187,19 @@ async def run_l2(email: str, l1: L1Result, model: str = L2_MODEL, max_rounds: in
             total_input += usage.input_tokens
             total_output += usage.output_tokens
 
+        round_label = _normalize_label(data["label"])
+        round_confidence = float(data["confidence"])
+
+        # Code-level consensus: if the label agrees with what we passed in,
+        # treat it as consensus regardless of the model's agreed flag.
+        label_agrees = round_label == current_label
+        agreed = label_agrees or bool(data.get("agreed", False))
+
         round_result = L2Round(
             round=round_num,
-            label=data["label"],
-            confidence=float(data["confidence"]),
-            agreed=bool(data.get("agreed", False)),
+            label=round_label,
+            confidence=round_confidence,
+            agreed=agreed,
             argument=data["argument"],
         )
         rounds.append(round_result)
